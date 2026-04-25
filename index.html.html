@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Student Hackathon 2026 — Deep SWAT</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #07080f;
+    --bg2: #0c0e1a;
+    --surface: #121528;
+    --border: rgba(99,130,255,0.15);
+    --blue: #4f7cff;
+    --violet: #9b6dff;
+    --cyan: #00e5ff;
+    --pink: #ff5fc4;
+    --text: #e8ecff;
+    --muted: #7a85b0;
+    --card: rgba(255,255,255,0.04);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5 {
+    font-family: 'Syne', sans-serif;
+    line-height: 1.15;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 5%;
+    backdrop-filter: blur(20px);
+    background: rgba(7,8,15,0.7);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--cyan); }
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.88rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--blue), var(--violet));
+    color: #fff !important;
+    padding: 0.45rem 1.2rem;
+    border-radius: 100px;
+    font-weight: 600 !important;
+    font-size: 0.85rem !important;
+    letter-spacing: 0.02em;
+    transition: opacity 0.2s !important;
+  }
+  .nav-cta:hover { opacity: 0.85; color: #fff !important; }
+
+  /* ── HERO ── */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 8rem 5% 6rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Animated grid */
+  #hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(79,124,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(79,124,255,0.06) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridShift 20s linear infinite;
+  }
+  @keyframes gridShift {
+    0%   { transform: translateY(0); }
+    100% { transform: translateY(60px); }
+  }
+
+  /* Glowing orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(90px);
+    pointer-events: none;
+    animation: float 8s ease-in-out infinite;
+  }
+  .orb1 { width: 500px; height: 500px; background: rgba(79,124,255,0.22); top: -100px; left: -150px; animation-delay: 0s; }
+  .orb2 { width: 400px; height: 400px; background: rgba(155,109,255,0.18); top: 100px; right: -100px; animation-delay: -3s; }
+  .orb3 { width: 300px; height: 300px; background: rgba(0,229,255,0.12); bottom: 50px; left: 30%; animation-delay: -5s; }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50% { transform: translateY(-30px) scale(1.04); }
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(79,124,255,0.12);
+    border: 1px solid rgba(79,124,255,0.3);
+    color: var(--cyan);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.4rem 1rem;
+    border-radius: 100px;
+    margin-bottom: 2rem;
+    position: relative;
+    animation: fadeUp 0.8s ease both;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--cyan);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--cyan);
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+  .hero-title {
+    font-size: clamp(2.8rem, 7vw, 5.5rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.05;
+    margin-bottom: 1rem;
+    position: relative;
+    animation: fadeUp 0.8s 0.15s ease both;
+  }
+  .hero-title .grad {
+    background: linear-gradient(135deg, var(--blue) 0%, var(--violet) 50%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: clamp(1rem, 2.5vw, 1.35rem);
+    color: var(--muted);
+    font-weight: 300;
+    max-width: 560px;
+    margin: 0 auto 0.8rem;
+    position: relative;
+    animation: fadeUp 0.8s 0.25s ease both;
+  }
+  .hero-subtitle em {
+    color: var(--text);
+    font-style: normal;
+    font-weight: 500;
+  }
+
+  .hero-presenter {
+    font-size: 0.85rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    margin-bottom: 2.5rem;
+    animation: fadeUp 0.8s 0.35s ease both;
+  }
+  .hero-presenter span { color: var(--violet); font-weight: 600; }
+
+  .hero-btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.45s ease both;
+    position: relative;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, var(--blue), var(--violet));
+    color: #fff;
+    padding: 0.85rem 2.2rem;
+    border-radius: 100px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-decoration: none;
+    letter-spacing: 0.01em;
+    box-shadow: 0 0 40px rgba(79,124,255,0.35);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--violet), var(--pink));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 60px rgba(79,124,255,0.5); }
+  .btn-primary:hover::before { opacity: 1; }
+  .btn-primary span { position: relative; }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0.85rem 2rem;
+    border-radius: 100px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.3s;
+    backdrop-filter: blur(10px);
+  }
+  .btn-secondary:hover { border-color: rgba(99,130,255,0.4); background: rgba(255,255,255,0.07); transform: translateY(-2px); }
+
+  /* Hero stats */
+  .hero-stats {
+    display: flex;
+    gap: 3rem;
+    justify-content: center;
+    margin-top: 5rem;
+    flex-wrap: wrap;
+    animation: fadeUp 0.8s 0.6s ease both;
+    position: relative;
+  }
+  .stat { text-align: center; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--cyan), var(--blue));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .stat-label { font-size: 0.78rem; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; margin-top: 0.2rem; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SECTIONS ── */
+  section { padding: 7rem 5%; position: relative; }
+  .section-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--blue);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+  }
+  .section-desc {
+    color: var(--muted);
+    font-size: 1.05rem;
+    max-width: 560px;
+    line-height: 1.8;
+  }
+  .section-header { margin-bottom: 4rem; }
+
+  /* ── ABOUT ── */
+  #about { background: var(--bg2); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .about-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .about-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .about-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--violet));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .about-card:hover { border-color: rgba(99,130,255,0.3); transform: translateY(-4px); }
+  .about-card:hover::before { opacity: 1; }
+  .about-card-icon {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+  }
+  .about-card h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    color: var(--text);
+  }
+  .about-card p {
+    font-size: 0.82rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── THEME ── */
+  #theme {
+    text-align: center;
+    background: var(--bg);
+  }
+  .theme-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .theme-quote {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(1.6rem, 4vw, 2.8rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    background: linear-gradient(135deg, var(--text) 0%, var(--violet) 60%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin: 2rem 0;
+  }
+  .theme-examples {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 2.5rem;
+  }
+  .theme-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 0.55rem 1.2rem;
+    border-radius: 100px;
+    font-size: 0.88rem;
+    color: var(--text);
+    font-weight: 500;
+    transition: all 0.3s;
+  }
+  .theme-tag:hover { border-color: var(--blue); color: var(--cyan); background: rgba(79,124,255,0.08); }
+  .theme-tag .icon { font-size: 1rem; }
+
+  /* ── SCHEDULE ── */
+  #schedule { background: var(--bg2); }
+  .schedule-grid {
+    max-width: 750px;
+    margin: 0 auto;
+    position: relative;
+  }
+  .schedule-grid::before {
+    content: '';
+    position: absolute;
+    left: 50px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, var(--border) 10%, var(--border) 90%, transparent);
+  }
+  .schedule-item {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-bottom: 2.5rem;
+    position: relative;
+    animation: slideIn 0.5s ease both;
+  }
+  .schedule-time {
+    min-width: 80px;
+    font-family: 'Syne', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: 0.04em;
+    padding-top: 0.9rem;
+    text-align: right;
+  }
+  .schedule-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--violet));
+    flex-shrink: 0;
+    margin-top: 1rem;
+    box-shadow: 0 0 12px rgba(79,124,255,0.5);
+    position: relative;
+    z-index: 1;
+  }
+  .schedule-content {
+    flex: 1;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1rem 1.4rem;
+    transition: all 0.3s;
+  }
+  .schedule-content:hover { border-color: rgba(99,130,255,0.3); transform: translateX(4px); }
+  .schedule-content h4 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+    color: var(--text);
+  }
+  .schedule-content p {
+    font-size: 0.83rem;
+    color: var(--muted);
+  }
+  .schedule-emoji { font-size: 1.1rem; margin-right: 0.4rem; }
+
+  /* ── RULES ── */
+  #rules { background: var(--bg); }
+  .rules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .rule-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2rem;
+    display: flex;
+    gap: 1.2rem;
+    align-items: flex-start;
+    transition: all 0.3s;
+  }
+  .rule-card:hover { border-color: rgba(99,130,255,0.3); transform: translateY(-3px); }
+  .rule-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: rgba(79,124,255,0.25);
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .rule-card h4 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .rule-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── JUDGING ── */
+  #judging { background: var(--bg2); }
+  .judging-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .judge-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .judge-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 0%, rgba(79,124,255,0.08) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .judge-card:hover { border-color: rgba(99,130,255,0.35); transform: translateY(-6px); box-shadow: 0 20px 50px rgba(0,0,0,0.3); }
+  .judge-card:hover::after { opacity: 1; }
+  .judge-icon {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .judge-card h4 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    background: linear-gradient(135deg, var(--text), var(--violet));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .judge-card p { font-size: 0.83rem; color: var(--muted); }
+  .judge-pct {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: 'Syne', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: var(--cyan);
+  }
+
+  /* ── REGISTER ── */
+  #register {
+    background: var(--bg);
+    text-align: center;
+  }
+  .register-wrap {
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .form-group {
+    margin-bottom: 1.2rem;
+    text-align: left;
+  }
+  .form-group label {
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.5rem;
+  }
+  .form-group input, .form-group select {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 0.85rem 1.2rem;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    appearance: none;
+  }
+  .form-group select { cursor: pointer; }
+  .form-group input::placeholder { color: var(--muted); }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(79,124,255,0.15);
+  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .form-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 3rem;
+    text-align: left;
+  }
+  .btn-submit {
+    width: 100%;
+    background: linear-gradient(135deg, var(--blue), var(--violet));
+    border: none;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 100px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    margin-top: 0.5rem;
+    box-shadow: 0 0 30px rgba(79,124,255,0.3);
+    transition: all 0.3s;
+  }
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(79,124,255,0.5); }
+  .form-note {
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 1rem;
+  }
+  .success-msg {
+    display: none;
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.25);
+    border-radius: 12px;
+    padding: 1rem;
+    color: var(--cyan);
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+    padding: 3rem 5%;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.85rem;
+  }
+  footer strong { color: var(--text); }
+  footer .footer-accent { color: var(--violet); }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem; }
+    .nav-links { display: none; }
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .about-cards { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .schedule-grid::before { left: 40px; }
+    .schedule-time { min-width: 60px; font-size: 0.68rem; }
+    .hero-stats { gap: 1.5rem; }
+    .form-card { padding: 2rem 1.5rem; }
+    section { padding: 5rem 5%; }
+  }
+
+  /* Floating particles */
+  .particles {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .particle {
+    position: absolute;
+    width: 2px; height: 2px;
+    background: var(--blue);
+    border-radius: 50%;
+    opacity: 0;
+    animation: particleFloat linear infinite;
+  }
+  @keyframes particleFloat {
+    0%   { opacity: 0; transform: translateY(100vh) scale(0); }
+    10%  { opacity: 0.6; }
+    90%  { opacity: 0.3; }
+    100% { opacity: 0; transform: translateY(-20px) scale(1.5); }
+  }
+
+  /* Marquee */
+  .marquee-wrap {
+    overflow: hidden;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    padding: 0.9rem 0;
+    background: rgba(79,124,255,0.03);
+    margin: 2rem 0;
+  }
+  .marquee-track {
+    display: flex;
+    gap: 3rem;
+    white-space: nowrap;
+    animation: marquee 25s linear infinite;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .marquee-track span { color: var(--blue); }
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+</style>
+</head>
+<body>
+
+<!-- Particles -->
+<div class="particles" id="particles"></div>
+
+<!-- Nav -->
+<nav>
+  <a href="#hero" class="nav-logo">SSH<span>2026</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#theme">Theme</a></li>
+    <li><a href="#schedule">Schedule</a></li>
+    <li><a href="#rules">Rules</a></li>
+    <li><a href="#judging">Judging</a></li>
+    <li><a href="#register" class="nav-cta">Register Now</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+
+  <div class="hero-badge">⚡ Deep SWAT Presents</div>
+
+  <h1 class="hero-title">
+    Smart Student<br>
+    <span class="grad">Hackathon 2026</span>
+  </h1>
+
+  <p class="hero-subtitle">
+    <em>Build Something That Improves Student Life.</em><br>
+    One day. Real ideas. Unlimited potential.
+  </p>
+
+  <p class="hero-presenter">
+    Organized by <span>Deep SWAT</span> · Venue: Deep Boarding High School · Classes 7–10
+  </p>
+
+  <div class="hero-btns">
+    <a href="#register" class="btn-primary">
+      <span>🚀 Register Now</span>
+    </a>
+    <a href="#about" class="btn-secondary">
+      Learn More ↓
+    </a>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat">
+      <div class="stat-num">1</div>
+      <div class="stat-label">Epic Day</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">4</div>
+      <div class="stat-label">Classes</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Ideas</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num">🏆</div>
+      <div class="stat-label">Awards</div>
+    </div>
+  </div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>⚡</span> Innovate &nbsp; <span>•</span> &nbsp; Create &nbsp; <span>•</span> &nbsp; Collaborate &nbsp; <span>•</span> &nbsp; Build &nbsp; <span>•</span> &nbsp; Present &nbsp; <span>•</span> &nbsp; Win &nbsp; <span>•</span> &nbsp; Inspire &nbsp; <span>•</span> &nbsp; Dream &nbsp; <span>•</span> &nbsp; Code &nbsp; <span>•</span> &nbsp; Design &nbsp; <span>•</span> &nbsp; Solve &nbsp; <span>⚡</span> Innovate &nbsp; <span>•</span> &nbsp; Create &nbsp; <span>•</span> &nbsp; Collaborate &nbsp; <span>•</span> &nbsp; Build &nbsp; <span>•</span> &nbsp; Present &nbsp; <span>•</span> &nbsp; Win &nbsp; <span>•</span> &nbsp; Inspire &nbsp; <span>•</span> &nbsp; Dream &nbsp; <span>•</span> &nbsp; Code &nbsp; <span>•</span> &nbsp; Design &nbsp; <span>•</span> &nbsp; Solve &nbsp;
+  </div>
+</div>
+
+<!-- About -->
+<section id="about">
+  <div class="about-grid">
+    <div class="reveal">
+      <div class="section-label">About the Event</div>
+      <h2 class="section-title">Where Students Become<br>Problem Solvers</h2>
+      <p class="section-desc">
+        Smart Student Hackathon 2026 is a one-day innovation challenge organized by <strong style="color:var(--text)">Deep SWAT</strong>, held at <strong style="color:var(--text)">Deep Boarding High School</strong>. Students from Classes 7 to 10 team up, think big, and build creative solutions that make student life better. No experience needed — just curiosity and teamwork.
+      </p>
+    </div>
+    <div class="about-cards reveal">
+      <div class="about-card">
+        <div class="about-card-icon">⚡</div>
+        <h4>Organized by Deep SWAT</h4>
+        <p>Proudly organized by Deep SWAT — a student innovation group driving change.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">📍</div>
+        <h4>Venue: Deep Boarding H.S.</h4>
+        <p>Taking place at Deep Boarding High School — our home for innovation.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">👥</div>
+        <h4>Mixed Teams</h4>
+        <p>Classes 7–10 collaborate. Diverse perspectives = better ideas.</p>
+      </div>
+      <div class="about-card">
+        <div class="about-card-icon">💡</div>
+        <h4>All Skill Levels</h4>
+        <p>Coders, artists, writers, dreamers — everyone belongs here.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Theme -->
+<section id="theme">
+  <div class="theme-inner">
+    <div class="section-label reveal">2026 Theme</div>
+    <div class="theme-quote reveal">"Build Something That<br>Improves Student Life"</div>
+    <p class="section-desc reveal" style="margin: 0 auto 1rem; text-align: center;">
+      Think about what makes school better. Then make it real. Your solution can be anything from an app to a poster — if it helps students, it counts.
+    </p>
+    <div class="theme-examples reveal">
+      <div class="theme-tag"><span class="icon">📱</span> Mobile App</div>
+      <div class="theme-tag"><span class="icon">🌐</span> Website</div>
+      <div class="theme-tag"><span class="icon">🎨</span> Creative Design</div>
+      <div class="theme-tag"><span class="icon">📋</span> Poster Campaign</div>
+      <div class="theme-tag"><span class="icon">🤖</span> AI Tool</div>
+      <div class="theme-tag"><span class="icon">💬</span> Social System</div>
+    </div>
+  </div>
+</section>
+
+<!-- Schedule -->
+<section id="schedule">
+  <div class="section-header reveal" style="text-align: center;">
+    <div class="section-label">Day Schedule</div>
+    <h2 class="section-title">Your Hackathon Journey</h2>
+    <p class="section-desc" style="margin: 0 auto;">From the opening bell to the award ceremony — here's how the day unfolds.</p>
+  </div>
+  <div class="schedule-grid">
+    <div class="schedule-item reveal">
+      <div class="schedule-time">8:30 AM</div>
+      <div class="schedule-dot"></div>
+      <div class="schedule-content">
+        <h4><span class="schedule-emoji">🎉</span>Opening Ceremony</h4>
+        <p>Welcome address, introduction to the theme, and rules briefing.</p>
+      </div>
+    </div>
+    <div class="schedule-item reveal">
+      <div class="schedule-time">9:00 AM</div>
+      <div class="schedule-dot"></div>
+      <div class="schedule-content">
+        <h4><span class="schedule-emoji">🤝</span>Team Formation</h4>
+        <p>Meet your team members from different classes and assign roles.</p>
+      </div>
+    </div>
+    <div class="schedule-item reveal">
+      <div class="schedule-time">9:30 AM</div>
+      <div class="schedule-dot"></div>
+      <div class="schedule-content">
+        <h4><span class="schedule-emoji">⚡</span>Working Session I</h4>
+        <p>Deep work begins — brainstorming, planning, and early builds.</p>
+      </div>
+    </div>
+    <div class="schedule-item reveal">
+      <div class="schedule-time">12:30 PM</div>
+      <div class="schedule-dot"></div>
+      <div class="schedule-content">
+        <h4><span class="schedule-emoji">🍱</span>Lunch Break</h4>
+        <p>Recharge, connect, and get inspired by your teammates.</p>
+      </div>
+    </div>
+    <div class="schedule-item reveal">
+      <div class="schedule-time">1:30 PM</div>
+      <div class="schedule-dot"></div>
+      <div class="schedule-content">
+        <h4><span class="schedule-emoji">🔥</span>Final Development</h4>
+        <p>Polish your project and prepare your presentation.</p>
+      </div>
+    </div>
+    <div class="schedule-item reveal">
+      <div class="schedule-time">3:30 PM</div>
+      <div class="schedule-dot"></div>
+      <div class="schedule-content">
+        <h4><span class="schedule-emoji">🎤</span>Team Presentations</h4>
+        <p>Each team presents their solution to the judges. Make it count!</p>
+      </div>
+    </div>
+    <div class="schedule-item reveal">
+      <div class="schedule-time">5:00 PM</div>
+      <div class="schedule-dot"></div>
+      <div class="schedule-content">
+        <h4><span class="schedule-emoji">🏆</span>Awards & Closing</h4>
+        <p>Winners announced, certificates awarded, and memories made.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Rules -->
+<section id="rules">
+  <div class="section-header reveal">
+    <div class="section-label">Ground Rules</div>
+    <h2 class="section-title">Fair Play for Everyone</h2>
+    <p class="section-desc">Simple rules that keep it fun, fair, and inspiring for all participants.</p>
+  </div>
+  <div class="rules-grid">
+    <div class="rule-card reveal">
+      <div class="rule-num">01</div>
+      <div>
+        <h4>Mixed Teams Allowed</h4>
+        <p>Teams can include students from any combination of Classes 7–10. Diversity makes stronger solutions.</p>
+      </div>
+    </div>
+    <div class="rule-card reveal">
+      <div class="rule-num">02</div>
+      <div>
+        <h4>All Skill Levels Welcome</h4>
+        <p>No coding experience required. Ideas, design, and communication skills are equally valuable.</p>
+      </div>
+    </div>
+    <div class="rule-card reveal">
+      <div class="rule-num">03</div>
+      <div>
+        <h4>Respect the Clock</h4>
+        <p>Stick to the schedule. Each session and presentation has a time limit — plan accordingly.</p>
+      </div>
+    </div>
+    <div class="rule-card reveal">
+      <div class="rule-num">04</div>
+      <div>
+        <h4>Originality Only</h4>
+        <p>All ideas must be original. Your solution should be designed and built during the hackathon day.</p>
+      </div>
+    </div>
+    <div class="rule-card reveal">
+      <div class="rule-num">05</div>
+      <div>
+        <h4>Creativity Encouraged</h4>
+        <p>Think outside the box. Wild, unconventional ideas are celebrated — not discouraged.</p>
+      </div>
+    </div>
+    <div class="rule-card reveal">
+      <div class="rule-num">06</div>
+      <div>
+        <h4>Be a Team Player</h4>
+        <p>Collaboration is key. Support your teammates and respect other teams' work throughout the day.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Judging -->
+<section id="judging">
+  <div class="section-header reveal" style="text-align: center;">
+    <div class="section-label">Evaluation</div>
+    <h2 class="section-title">Judging Criteria</h2>
+    <p class="section-desc" style="margin: 0 auto;">Projects are evaluated holistically across four key dimensions.</p>
+  </div>
+  <div class="judging-grid">
+    <div class="judge-card reveal">
+      <span class="judge-icon">💡</span>
+      <h4>Idea & Innovation</h4>
+      <p>How fresh and impactful is the core concept?</p>
+      <div class="judge-pct">25%</div>
+    </div>
+    <div class="judge-card reveal">
+      <span class="judge-icon">🎨</span>
+      <h4>Creativity</h4>
+      <p>Does the solution stand out in its approach and design?</p>
+      <div class="judge-pct">25%</div>
+    </div>
+    <div class="judge-card reveal">
+      <span class="judge-icon">⚙️</span>
+      <h4>Execution</h4>
+      <p>Is the prototype functional, logical, and well-crafted?</p>
+      <div class="judge-pct">25%</div>
+    </div>
+    <div class="judge-card reveal">
+      <span class="judge-icon">🎤</span>
+      <h4>Presentation</h4>
+      <p>How clearly and confidently is the solution communicated?</p>
+      <div class="judge-pct">25%</div>
+    </div>
+  </div>
+</section>
+
+<!-- Register -->
+<section id="register">
+  <div class="section-header reveal">
+    <div class="section-label">Get Involved</div>
+    <h2 class="section-title">Ready to Build?</h2>
+    <p class="section-desc" style="margin: 0 auto 3rem; text-align: center;">Sign up below and secure your spot at Smart Student Hackathon 2026. It's free. It's fun. It's your moment.</p>
+  </div>
+  <div class="register-wrap">
+    <form class="form-card reveal" id="regForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" name="First Name" placeholder="e.g. Priya" id="fname" required>
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" name="Last Name" placeholder="e.g. Sharma" id="lname" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Class</label>
+        <select name="Class" id="cls" required>
+          <option value="" disabled selected>Select your class & section</option>
+          <optgroup label="Class 7">
+            <option>Class 7 - A</option>
+            <option>Class 7 - B</option>
+            <option>Class 7 - C</option>
+            <option>Class 7 - D</option>
+            <option>Class 7 - E</option>
+          </optgroup>
+          <optgroup label="Class 8">
+            <option>Class 8 - A</option>
+            <option>Class 8 - B</option>
+            <option>Class 8 - C</option>
+            <option>Class 8 - D</option>
+          </optgroup>
+          <optgroup label="Class 9">
+            <option>Class 9 - A</option>
+            <option>Class 9 - B</option>
+            <option>Class 9 - C</option>
+            <option>Class 9 - D</option>
+          </optgroup>
+          <optgroup label="Class 10">
+            <option>Class 10 - A</option>
+            <option>Class 10 - B</option>
+            <option>Class 10 - C</option>
+            <option>Class 10 - D</option>
+          </optgroup>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Team Name</label>
+        <input type="text" name="Team Name" placeholder="e.g. The Innovators" id="team" required>
+      </div>
+      <button class="btn-submit" type="submit">🚀 Join Hackathon</button>
+      <div class="form-note">Free to participate. Venue: Deep Boarding High School. Organized by Deep SWAT.</div>
+      <div class="success-msg" id="success">
+        ✅ You're registered! We'll see you at SSH 2026. Get ready to build something amazing.
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p><strong>Smart Student Hackathon 2026</strong></p>
+  <p style="margin-top:0.5rem;">Organized by <span class="footer-accent">Deep SWAT</span> · Venue: <span class="footer-accent">Deep Boarding High School</span> · Classes 7–10</p>
+  <p style="margin-top:0.5rem; font-size:0.78rem;">Inspiring the next generation of problem solvers. 🚀</p>
+</footer>
+
+<script>
+  // Particles
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 35; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.cssText = `
+      left: ${Math.random() * 100}%;
+      animation-duration: ${6 + Math.random() * 12}s;
+      animation-delay: ${Math.random() * 10}s;
+      width: ${1 + Math.random() * 2}px;
+      height: ${1 + Math.random() * 2}px;
+      background: ${['#4f7cff','#9b6dff','#00e5ff','#ff5fc4'][Math.floor(Math.random()*4)]};
+    `;
+    container.appendChild(p);
+  }
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) {
+        setTimeout(() => e.target.classList.add('visible'), 100);
+        observer.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(r => observer.observe(r));
+
+  // Formspree AJAX submit
+  const regForm = document.getElementById('regForm');
+  regForm.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = regForm.querySelector('.btn-submit');
+    btn.textContent = '⏳ Submitting...';
+    btn.disabled = true;
+    const data = new FormData(regForm);
+    try {
+      const res = await fetch('https://formspree.io/f/xzdywpoe', {
+        method: 'POST',
+        body: data,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (res.ok) {
+        regForm.reset();
+        btn.textContent = '✅ Registered!';
+        document.getElementById('success').style.display = 'block';
+        document.getElementById('success').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      } else {
+        btn.textContent = '🚀 Join Hackathon';
+        btn.disabled = false;
+        alert('Oops! Something went wrong. Please try again.');
+      }
+    } catch(err) {
+      btn.textContent = '🚀 Join Hackathon';
+      btn.disabled = false;
+      alert('Network error. Please check your connection.');
+    }
+  });
+
+  // Staggered reveals for grid items
+  document.querySelectorAll('.about-cards .about-card, .rules-grid .rule-card, .judging-grid .judge-card').forEach((el, i) => {
+    el.style.transitionDelay = `${i * 0.1}s`;
+  });
+</script>
+</body>
+</html>
